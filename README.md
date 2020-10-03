@@ -11,3 +11,5 @@ git clone https://github.com/Ryan-Rudes/exploration_agent.git
 cd exploration_agent/
 python3 map.py
 ```
+Then, you'll need to enter the environment ID of one of OpenAI gym's Atari environments. \
+You can select one [here](https://gym.openai.com/envs/#atari).
