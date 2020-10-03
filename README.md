@@ -14,3 +14,8 @@ python3 map.py
 Then, you'll need to enter the environment ID of one of OpenAI gym's Atari environments. \
 You can select one [here](https://gym.openai.com/envs/#atari).
 Make sure the one you choose does not contain "ram".
+It might not work with every environment. Some ones that are guaranteed to work are:
+ 1. Pitfall-v0
+ 2. MontezumaRevenge-v0
+ 3. Qbert-v0
+ 4. 
