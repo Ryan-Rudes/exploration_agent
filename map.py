@@ -44,7 +44,7 @@ cmap = matplotlib.cm.get_cmap("Paired")
 colors = [cmap(x) for x in np.linspace(0, 1, num = env.action_space.n)]
 
 state = env.reset()
-prev_ref = get_reference(state)
+prev_ref = get_reference(state) + "0"
 
 references = [prev_ref]
 restores = [env.env.clone_full_state()]
@@ -70,7 +70,7 @@ for episode in range(episodes):
       
     state, reward, terminal, info = env.step(action)
     score += reward
-    curr_ref = get_reference(state)
+    curr_ref = get_reference(state) + str(score)
     if not curr_ref in references:
       references.append(curr_ref)
       graph.add_node(curr_ref)
