@@ -42,7 +42,6 @@ idx = 0
 graph = nx.DiGraph()
 cmap = matplotlib.cm.get_cmap("Paired")
 colors = [cmap(x) for x in np.linspace(0, 1, num = env.action_space.n)]
-draw_frequency = 10
 
 state = env.reset()
 prev_ref = get_reference(state)
@@ -55,7 +54,8 @@ scores = [0]
 
 edge_labels = {}
 
-episodes = 100
+episodes = int(input("Number of episodes (ie. 100): "))
+draw_frequency = int(input("Every ___ episodes, save the figure (ie. 10): "))
 
 for episode in range(episodes):
   score = scores[idx]
