@@ -83,7 +83,8 @@ for episode in range(episodes):
     graph.add_edge(prev_ref, curr_ref)
     edge_labels[(prev_ref, curr_ref)] = action
     prev_ref = curr_ref
-
+    idx = references.index(reference)
+    
   if episode % draw_frequency == 0:
     edge_colors = [cmap(action / env.action_space.n) for action in list(edge_labels.values())]
     maxx = max(scores)
@@ -101,7 +102,7 @@ for episode in range(episodes):
     pylab.close()
     fig.savefig("%s_map.jpeg" % name, dpi = 1000)
   
-  p = np.array(explored)
+  p = 1 - np.array(explored)
   p = p / p.sum()
   idx = np.random.choice(np.arange(len(references)), p = p)
   env.reset()
