@@ -51,6 +51,7 @@ restores = [env.env.clone_full_state()]
 actions_taken = [list(range(env.action_space.n))]
 explored = [0]
 scores = [0]
+terminals = [0]
 
 edge_labels = {}
 
@@ -69,8 +70,6 @@ for episode in range(episodes):
       
     state, reward, terminal, info = env.step(action)
     score += reward
-    terminal = terminal or info['ale.lives'] < 3
-    if terminal: break
     curr_ref = get_reference(state)
     if not curr_ref in references:
       references.append(curr_ref)
@@ -79,23 +78,26 @@ for episode in range(episodes):
       actions_taken.append(list(range(env.action_space.n)))
       explored.append(0)
       scores.append(score)
+      terminals.append(int(terminal))
 
     graph.add_edge(prev_ref, curr_ref)
     edge_labels[(prev_ref, curr_ref)] = action
     prev_ref = curr_ref
     idx = references.index(prev_ref)
+    if terminal: break
     
   if episode % draw_frequency == 0:
     edge_colors = [cmap(action / env.action_space.n) for action in list(edge_labels.values())]
     maxx = max(scores)
-    node_colors = [(*((np.array([94, 255, 0]) * score / maxx) / 255), 1) for score in scores]
+    node_sizes = np.array(terminals) * 9 + 1
+    node_colors = [(1, 0, 0, 1) if terminal else (*((np.array([94, 255, 0]) * score / maxx) / 255), 1) for terminal, score in zip(terminals, scores)]
     widths = [0.1 for u, v in graph.edges]
     fig = plt.figure(figsize = (10, 10))
     pos = nx.spring_layout(graph)
     labels = {(ref1, ref2): env.env.get_action_meanings()[action] for (ref1, ref2), action in zip(edge_labels.keys(), edge_labels.values())}
     nx.draw_networkx_edge_labels(graph, pos, edge_labels = labels, font_size = 1)
     nx.draw_networkx_edges(graph, pos, arrowstyle = '-|>', arrowsize = 1, width = 0.1, edge_color = edge_colors)
-    nx.draw_networkx_nodes(graph, pos, node_color = node_colors, node_size = 1)
+    nx.draw_networkx_nodes(graph, pos, node_color = node_colors, node_size = node_sizes)
     handles = [mpatches.Patch(color = color, label = label) for color, label in zip(colors, env.env.get_action_meanings())]
     plt.legend(handles = handles, title = "Actions")
     plt.title(name)
@@ -103,6 +105,7 @@ for episode in range(episodes):
     fig.savefig("%s_map.jpeg" % name, dpi = 1000)
   
   p = 1 - np.array(explored)
+  p = p * (1 - np.array(terminals))
   p = p / p.sum()
   idx = np.random.choice(np.arange(len(references)), p = p)
   env.reset()
