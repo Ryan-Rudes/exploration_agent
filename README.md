@@ -13,3 +13,4 @@ python3 map.py
 ```
 Then, you'll need to enter the environment ID of one of OpenAI gym's Atari environments. \
 You can select one [here](https://gym.openai.com/envs/#atari).
+Make sure the one you choose does not contain "ram".
