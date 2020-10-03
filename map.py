@@ -83,7 +83,7 @@ for episode in range(episodes):
     graph.add_edge(prev_ref, curr_ref)
     edge_labels[(prev_ref, curr_ref)] = action
     prev_ref = curr_ref
-    idx = references.index(reference)
+    idx = references.index(prev_ref)
     
   if episode % draw_frequency == 0:
     edge_colors = [cmap(action / env.action_space.n) for action in list(edge_labels.values())]
